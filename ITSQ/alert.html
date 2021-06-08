@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="static/js/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="static/js/alert.js"></script>
+<link rel="stylesheet" href="static/css/alert.css">
+<style type="text/css">
+ .span1{
+    width: 15%;
+    height: 10%;
+    margin-left: 5%;
+    float: left;
+     font-size: 3vw;
+}
+.msg{
+    width: 100%;
+    height: 60%;
+      margin-top: 5%;
+          margin-bottom: 5%;
+}
+.zcTitle{
+width: 70%;
+ font-size: 2.4vw;
+    height: 12%;
+        margin-bottom: 5%;}
+.zcContent{
+width: 70%;
+    height: 70%;
+     font-size: 2.4vw;
+}
+.button{
+    margin-right: 3%;
+    width: 10%;
+    height: 5%;
+    font-size: 3vw;
+}
+.status{
+     width: 20%;
+    height: 5%;
+    margin-right: 10%;
+   font-size: 3vw;
+}
+</style>
+<script type="text/javascript">
+var postId = window.location.search.replace("?id=","");
+var likeskill=null;
+var newContent=null;
+var create_id=null;
+$(function(){
+$.ajax({
+	   type: "post",
+	   url: "getpostinfobyid",
+	   data :{"postId":postId},
+	   dataType : "json",
+	   error : function(){
+		   alert("获取用户信息失败");
+	   },
+	   success: function(msg){
+		   console.log(msg);
+		   likeskill=msg.postIdInfo[0].kill_type;
+		   create_id=msg.postIdInfo[0].create_id;
+		   $("#zcTitle").val(msg.postIdInfo[0].title);
+		   $("#zcContent").val(msg.postIdInfo[0].content);
+		   
+	   }
+	});
+});
+
+
+var sendpost=function(){
+	$.ajax({
+		   type: "post",
+		   url: "sendboke",
+		   data:{
+			   "title":$("#zcTitle").val()==""?"":$("#zcTitle").val(),
+			   "content":$("#zcContent").val()==""?"":$("#zcContent").val(),
+			   "likeskill":likeskill,
+			   "status":$("#status").val()},
+		   dataType : "json",
+		   error : function(){
+			   alert("博客发表失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg.result){
+				   alert("转发信息成功");
+				   $("#zcTitle").val("");
+				   $("#zcContent").val("");
+				   window.close();
+			   }
+			   else{
+				   alert("转发信息失败"); 
+			   }
+		   },
+		   complete: function() {$("#vvv").remove();
+	        }
+		});
+	
+	$.ajax({
+		   type: "post",
+		   url: "zf",
+		   data:{"postId":postId},
+		   dataType : "json",
+		   success: function(msg){
+			   
+		   }
+		});
+	
+	
+};
+
+
+</script>
+</head>
+<body>
+	<div id="msg" class="msg">
+	<span class="span1">主题：</span><textarea rows="3" cols="50" id="zcTitle" class="zcTitle"maxlength="200"></textarea>
+	<span class="span1">内容：</span><textarea rows="12" cols="80" id="zcContent"class="zcContent" maxlength="5000"></textarea>
+	</div>
+	<span class="span1">谁可见：</span>
+	<select class="status" name="status" id="status" required="required">
+		<option value="1">所有人可见</option>
+		<option value="2">自己可见</option>
+	</select> 
+	
+	<button id="sendbtn" class="button" onclick="sendpost()">发布</button>
+    <input type="button" class="button" id="btn" value="关闭"/>
+    <div id="vvv"></div>
+        
+        <script type="text/javascript">
+            var btn = document.getElementById('btn');
+            btn.onclick = function(){
+                window.close();
+                //location.reload() 
+                window.location.href="detail.html?id="+postId+"";
+            };
+        </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html{
+    width:100%;
+    height:100%;
+ }
+body {
+    background: url(../image/314814.jpg) no-repeat;
+    background-size: 100% 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+.sy {
+   height: 100%;
+ margin:auto;
+    width: 30%;
+    background-color: #454f4f9e;
+   
+}
+.denglu {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+ul{
+	       list-style: none;
+	       height: 37%;
+}
+li{
+	
+ 
+	margin-bottom: 5%;
+}
+
+.lab{
+	    background-image: -webkit-linear-gradient(top, #ffffff, #c4d3ec87);
+	    -webkit-background-clip: text;
+	    -webkit-text-fill-color: transparent;
+	    font-size: 1.2vw;
+	    font-weight: bold;
+	    display: inline;
+	}
+.username2{
+	height: 60%;
+    width: 65%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #c8cccf6e;
+    border: 1px solid #c8cccf00;
+    outline: 0;
+    color: white;
+}
+.password2{
+	 height: 60%;
+    width: 65%;
+	-webkit-appearance:none;
+	-moz-appearance: none;
+	background-color:#c8cccf6e;
+	border:1px solid #c8cccf00;
+	outline:0;
+	color: white;
+}
+
+input::-webkit-input-placeholder{
+  color: white;
+  font-size: 0.8vw;
+}
+.zhuce{
+
+		position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+
+.sytijiao {
+    border-radius: 100px;
+    outline: 0;
+    color: #6a7985;
+    font-size: 25px;
+    font-weight: 500;
+    background-color: #ffffffe6;
+}
+.sytijiao1 {
+   
+    height: 80%;
+    width: 12%;
+  
+    margin-top: 35%; 
+    margin-left: 43%;
+   
+}
+.sytijiao2 {
+height: 100%;
+    width: 10%;
+    /* margin-top: 8%; */
+    margin-left: 43%;
+}
+.ul1{   
+	width: 100%;
+    /* margin-top: 50%; */
+    padding: 20% 7%;
+    height: 65%;}
+.ul1>li{
+	    width: 100%;
+    height: 20%;
+    margin-bottom: 4%
+}
+.ul2>li {
+    width: 100%;
+    height: 8%;
+    margin-bottom: 4%;
+}
+.ul2 {
+  
+    width: 100%;
+
+    padding: 10% 5%;
+    height: 80%;
+}
+.but1 {
+    /* margin-top: 62%; */
+    width: 100%;    padding: 15% 5%;
+    /* margin-left: 23%; */
+    height: 35%;
+}
+.but2 {
+    width: 100%;
+    height: 15%;
+    margin-top: 5%;
+}
+.dlbut {
+	height: 20%;
+    border: 1px solid #c8cccf00;
+    width: 20%;
+    display: inline;
+    margin-left: 25%;
+    font-size: 1vw;
+    color: white;
+    background-color: #f0f8ff00;
+    outline: 0;
+}
+.zcbut{
+       height: 20%;
+    border: 1px solid #c8cccf00;
+    width: 20%;
+    display: inline;
+    font-size: 1vw;
+    color: white;
+    background-color: #f0f8ff00;
+    outline: 0;}
+.fenge{
+	color: white;
+	display: inline;
+	font-size: 1vw;
+}
+.wjbut{ 
+     outline: 0;
+	 border:1px solid #c8cccf00;
+    height: 30px;
+	display: inline;
+	
+	font-size: 1vw;
+	color: white;
+	background-color:#f0f8ff00;
+    width: 80px;}

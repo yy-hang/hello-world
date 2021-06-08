@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="static/js/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="static/js/alert.js"></script>
+<link rel="stylesheet" href="static/css/alert.css">
+<link rel="stylesheet" href="static/css/detail.css">
+<script type="text/javascript">
+var postId = window.location.search.replace("?id=","");
+var userId = null;
+var likeSkill=null;
+console.log(postId);
+$(function(){
+	var username=null;
+	$.ajax({
+		   type: "post",
+		   url: "homepageuser",
+		   dataType : "json",
+		   error : function(){
+			   alert("获取用户信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg == null || !msg.result){
+				   window.location.href="index.html";
+				   return;
+			   }
+			   userId=msg.id;
+			   likeSkill=msg.likeSkill;
+			   next();
+		   }
+		});
+	
+});
+	var next=function(){
+	$.ajax({
+		   type: "post",
+		   url: "getpostinfobyid",
+		   data:{"postId":postId},
+		   dataType : "json",
+		   error : function(){
+			   alert("获取博客信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg == null){
+				   window.location.href="index.html";
+				   return;
+			   }
+			   var str="";
+			   var str2="";
+				for(var index in msg.postIdInfo){
+					createUser=msg.postIdInfo[0].userName;
+					createUserId=msg.postIdInfo[0].create_id;
+					if(0==index){
+						str="<div>"
+						+"博客编号: "+msg.postIdInfo[index].id+"<br>"
+						+"<h2>主题: "+msg.postIdInfo[index].title+"</h2>"
+						+"<p>作者："+"<a href=\"perdetail.html?userId="+msg.postIdInfo[index].create_id+"&benUserId="+userId+"\">"+msg.postIdInfo[index].userName+"</a>"+"</p>"
+						+"<p>内容: "+msg.postIdInfo[index].content+"</p>"
+						+"<p>发表时间: "+msg.postIdInfo[index].create_time+"</p>"
+						+"评论:<textarea rows=\"1\" cols=\"20\" maxlength=\"500\" id=\"content\"></textarea> <button onclick=\"onclickk()\">提交</button>"
+						+"<br><br><div><button id=\"dianzan\"  onclick=\"zan()\" >❤<label id=\"zanshu\">(count)</label></button>"
+						+"<button id=\"pl\"   >💬<label id=\"plcount\">(count)</label></button>"
+						+"<button id=\"zhuanfa\" onclick=\"openWin(\'alert.html?id="+msg.postIdInfo[index].id+"\',620,650)\" >🏹<label id=\"Zfcount\">(count)</label></button></div>"
+						+"<br></div><div id=\"msg\"></div><hr>"
+						;
+					}else{
+					     str2+="<div>"
+					     +"<div class=\"plquser\">用户： "
+					     +"<a href=\"perdetail.html?userId="+msg.postIdInfo[index].create_id+"&benUserId="+userId+"\">"+msg.postIdInfo[index].userName+"</a>"
+					     +"回复用户: "
+					     +"<a href=\"perdetail.html?userId="+createUserId+"&benUserId="+userId+"\">"+createUser+"</a><br></div>"
+					     +"<a class=\"plcontent\" href=\"detail.html?id="+msg.postIdInfo[index].id+"\">"
+				         +"<p>内容: "+msg.postIdInfo[index].content+"</p></a>"
+					     +"<p class=\"pltime\">发表时间: "+msg.postIdInfo[index].create_time+"</p>"
+					     +"</div><hr><br>";
+				         }
+				}
+				$("#leaderPost").html(str);
+				$("#floowPost").html(str2);
+				
+				//部署界面成功后获取点赞数
+				$.ajax({
+					   type: "post",
+					   url: "getpostzancount",
+					   data : {"postId":postId},
+					   dataType : "json",
+					   error : function(){
+						   alert("获取用户信息失败");
+					   },
+					   success: function(msg){
+						   console.log(msg);
+						$("#zanshu").text(msg.postZanCount.zanCount);
+						$("#plcount").text(msg.postZanCount.plCount);
+						$("#Zfcount").text(msg.postZanCount.zfCount);
+					   }
+					});
+				
+		   }
+		});
+}
+
+var next2=function(){
+	$.ajax({
+		   type: "post",
+		   url: "getpostinfobyid",
+		   data:{"postId":postId},
+		   dataType : "json",
+		   error : function(){
+			   alert("获取博客信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg == null){
+				   window.location.href="index.html";
+				   return;
+			   }
+			   var str2="";
+				for(var index in msg.postIdInfo){
+					createUser=msg.postIdInfo[0].userName;
+					createUserId=msg.postIdInfo[0].create_id;
+					if(0==index){
+					}else{
+					     str2+="<div>"
+					     +"<div class=\"plquser\">用户： "
+					     +"<a href=\"perdetail.html?userId="+msg.postIdInfo[index].create_id+"&benUserId="+userId+"\">"+msg.postIdInfo[index].userName+"</a>"
+					     +"回复用户: "
+					     +"<a href=\"perdetail.html?userId="+createUserId+"&benUserId="+userId+"\">"+createUser+"</a><br></div>"
+					     +"<a class=\"plcontent\" href=\"detail.html?id="+msg.postIdInfo[index].id+"\">"
+				         +"<p>内容: "+msg.postIdInfo[index].content+"</p></a>"
+					     +"<p class=\"pltime\">发表时间: "+msg.postIdInfo[index].create_time+"</p>"
+					     +"</div><hr><br>";
+				         }
+				}
+				$("#floowPost").html(str2);
+				
+				
+		   }
+		});
+}
+
+//评论操作
+var onclickk=function(){
+	if($("#content").val().replace(/(^s*)|(s*$)/g, "").length ==0){
+		$("#content").focus();
+		alert("评论内容不可为空");
+		return;
+	}
+	$.ajax({
+		   type: "post",
+		   url: "pl",
+		   data:{"postId":postId,"content":$("#content").val(),"likeSkill":likeSkill,"userid":userId},
+		   dataType : "json",
+		   error : function(){
+			   alert("获取用户信息失败");
+		   },
+		   success: function(msg){
+			   if(msg==null||msg.result==false){
+				   alert("评论失败");
+				   return;
+			   }
+				   alert("评论成功");
+				   next();
+		   }
+		});
+};
+
+//点赞操作
+var zan=function(){
+	$("#dianzan").css("color","red");
+	$.ajax({
+		   type: "post",
+		   url: "getzancount",
+		   data:{"postId":postId},
+		   dataType : "json",
+		   error : function(){
+			   alert("点赞失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   $("#zanshu").text(msg.postZanCount.zanCount);
+				   
+		   }
+		});
+};
+
+function openWin(url,w,h){
+    if(w==""||w==null){
+        w = "620" ;
+    }
+    if(h==""||h==null){
+        h =  "650";
+    }
+    var winWidth = w; //要打开的窗口大小
+    var winHeight = h; //要打开的窗口大小
+    var winLeft = Math.floor((window.screen.availWidth-winWidth) / 2);
+    var winTop = Math.floor((window.screen.availHeight-winHeight) / 3);
+    var setting = "height=" + winHeight + ",width=" + winWidth + ",left=" + winLeft + ",top=" + winTop + "," + " toolbar=no, menubar=no, scrollbars=yes, resizable=yes,location=no, status=yes";
+    window.open(url,"newwindow",setting);
+};
+
+</script>
+</head>
+<body>
+<div id="details" class="details">
+<div id="leaderPost"></div>
+<div id="floowPost"></div>
+</div>
+</body>
+</html>

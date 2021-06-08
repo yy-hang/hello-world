@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="static/js/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="static/js/alert.js"></script>
+<link rel="stylesheet" href="static/css/alert.css">
+<link rel="stylesheet" href="static/css/perdetail.css">
+<script type="text/javascript">
+
+var url = document.location.toString();//获取url地址
+var urlParmStr = url.slice(url.indexOf('?')+1);//获取问号后所有的字符串
+var arr = urlParmStr.split('&');//通过&符号将字符串分割转成数组
+var userId = arr[0].split("=")[1];//获取数组中第一个参数
+var benUserId=arr[1].split("=")[1];
+var userName=null;
+var headiMag=null;
+$(function(){
+	console.log(benUserId);
+	$.ajax({
+		   type: "post",
+		   url: "getuserinfobyid",
+		   data:{"userId":userId},
+		   dataType : "json",
+		   beforeSend:function(){
+  	           $("#vvv").append('<img src="static/image/loading.gif"/>');
+    		},
+		   error : function(){
+			   alert("获取用户信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if("null"==msg.userInfo.headImage){
+				   $("#headImage").attr("src","static/image/default-avatar.png");
+				   headiMag="static/image/default-avatar.png";
+			   }else{
+				   $("#headImage").attr("src",msg.userInfo.headImage);
+				   headiMag=msg.userInfo.headImage;
+			   }
+			   userName=msg.userInfo.name;
+			   $("#title").text(msg.userInfo.name);
+			   $("#userName").text(msg.userInfo.name);
+			   $("#userSex").text(msg.userInfo.sex=="1"?"男":"女");
+			   $("#userBirthTime").text(msg.userInfo.birthTime);
+			   $("#glyStatus").text(msg.userInfo.glyStatus=="1"?"管理员":"正常成员");
+			   $("#unitName").text(msg.userInfo.unitName=="null"?"未填写":msg.userInfo.unitName);
+			   $("#jobPost").text(msg.userInfo.jobPost=="null"?"未填写":msg.userInfo.jobPost);
+			   $("#introduce").text(msg.userInfo.introduce=="null"?"未填写":msg.userInfo.introduce);
+			   $("#maritalStatus").text(msg.userInfo.maritalStatus=="1"?"已婚":"未婚");
+		   },
+		   complete: function() {$("#vvv").remove();
+	        }
+		});
+	
+	
+	$.ajax({
+		   type: "post",
+		   url: "getuserpostbyid",
+		   data:{"userId":userId},
+		   dataType : "json",
+		   beforeSend:function(){
+	           $("#ppp").append('<img src="static/image/loading.gif"/>');
+ 		},
+		   error : function(){
+			   alert("获取用户信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg.resultCount==0){
+				   $("#postdeinfo").html("<p>您还没有发布任何博客，快去发布新的博客吧。</p>");
+			   }
+			   else{
+				   var str="";
+				   for(var index in msg.postInfo){
+					   if(msg.postInfo[index].content.length>50){
+						   contentdt=msg.postInfo[index].content.substring(0,50)+"......";
+					   }else{
+						   contentdt=msg.postInfo[index].content;
+					   }
+					   if(benUserId==userId){
+						   str+="<ul class=\"perdetail_ul2\"><li class=\"perdetail_li1\"><img id='headImage' class='headImage' src='"+headiMag+"'></li></a>"
+							+"<li class=\"perdetail_li2\"><a href=\"detail.html?id="+msg.postInfo[index].id+"\">"+msg.postInfo[index].title+"</a></li><li class=\"perdetail_li3\">"
+							+msg.postInfo[index].create_time+"</li><li class=\"perdetail_li4\"><p id=\"pp\">"+contentdt+"</p></li>"
+					        +"<li class=\"perdetail_li5\"><button id=\"deletepost\" onclick=\"deletePost("+msg.postInfo[index].id+")\">删除<div id=\"dede\"></div></button></li></ul>";
+					   }else{
+						   str+="<ul class=\"perdetail_ul2\"><li class=\"perdetail_li1\"><img id='headImage' class='headImage' src='"+headiMag+"'></li></a>"
+							+"<li class=\"perdetail_li2\"><a href=\"detail.html?id="+msg.postInfo[index].id+"\">"+msg.postInfo[index].title+"</a></li><li class=\"perdetail_li3\">"
+							+msg.postInfo[index].create_time+"</li><li class=\"perdetail_li4\"><p id=\"pp\">"+contentdt+"</p></li></ul>";
+					   }
+					  
+				   }
+				   $("#postdeinfo").html(str);
+			   }
+		   },
+		   complete: function() {$("#ppp").remove();
+	        }
+		});
+		
+});
+
+var deletePost=function(id){
+	$.ajax({
+		   type: "post",
+		   url: "deletepost",
+		   data:{"postId":id},
+		   dataType : "json",
+		   beforeSend:function(){
+	           $("#dede").append('<img src="static/image/loading.gif"/>');
+ 			},
+		   error : function(){
+			   alert("删除失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg.result){
+				   alert("删除成功");
+				   window.location.reload();
+			   }else{
+				   alert("删除失败");
+			   }
+		   },
+		   complete: function() {$("#dede").remove();
+	        }
+		});
+};
+</script>
+
+</head>
+	<body>
+		<div class="box">
+			<div id="userinfo" class="userinfo">
+				<div id="vvv" class="vvv"></div>
+				<div id="userdeinfo" class="userdeinfo">
+					<h1 class="perInfoh1">个人信息</h1>
+					<ul class="perdetail_ul1">
+						<li class="liheadImage">
+							<span class="span1">个人头像：</span>
+							<img alt="个人头像" id="headImage" class="headImage1" src="">
+						</li>
+						<li class="demo">
+							<span class="span1">用户姓名：</span>
+							<span id="userName"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">用户性别：</span>
+							<span id="userSex"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">出生日期：</span>
+							<span id="userBirthTime"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">状----态：</span>
+							<span id="glyStatus"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">公司名称：</span>
+							<span id="unitName"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">工作职位：</span>
+							<span id="jobPost"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">婚姻状态：</span>
+							<span id="maritalStatus"></span>
+						</li>
+						<li class="demo">
+							<span class="span1">自我介绍：</span>
+							<span id="introduce"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+				<div id="postinfo"class="postinfo" >
+					<div class="header">
+						<h2 class="perInfoh2"><span id="title"></span>__的IT社区信息</h2>
+					</div>
+					<div id="ppp" class="vvv"></div>
+					<div id="postdeinfo" class="postdeinfo">我的IT社区信息
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

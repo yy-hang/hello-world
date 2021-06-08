@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>主页</title>
+<link rel="stylesheet" href="static/css/list.css">
+<link rel="stylesheet" href="static/css/alert.css">
+<script type="text/javascript" src="static/js/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="static/js/alert.js"></script>
+<script type="text/javascript">
+	var userid=null;
+	var likeSkill=null;
+	//判断分页是哪个的状态
+	var flag=1;
+	//全部博客页数
+	var allLastPage=null;
+	var allcurPage=1;
+
+	//我的博客的页数
+	var myLastPage=null;
+	var mycurPage=1;
+	//
+	var likeLastPage=null;
+	var likecurPage=1;
+	
+	//搜索分页
+	var selectLastPage=null;
+	var selectcurPage=1;
+	var selecttext=null;
+	//获取页数
+	var getPageFun=function(param,parae){
+		$.ajax({
+			   type: "post",
+			   url: "getpostpage",
+			   data:{"userid":param,"likeSkill":parae},
+			   dataType : "json",
+			   error : function(){
+			   },
+			   success: function(msg){
+				   console.log(msg);
+				   allLastPage=msg.allPostPage;
+				   myLastPage=msg.myPostPage;
+				   likeLastPage=msg.myLikePage;
+			   }
+			});
+	}
+	
+$(function(){
+	var userIdd=null;
+	$.ajax({
+		   type: "post",
+		   url: "homepageuser",
+		   dataType : "json",
+		   beforeSend:function(){
+	           $("#usering").append('<img src="static/image/loading.gif"/>');
+	        },
+		   error : function(){
+			   alert("获取用户信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg == null || !msg.result){
+				   window.location.href="index.html";
+				   return;
+			   }
+			   userid=msg.id;
+			   userIdd=msg.id;
+			   likeSkill=msg.likeSkill;
+			   getPageFun(userid,likeSkill);
+			   msg.headImage=="null"||msg.headImage==""?$("#headimage").attr("src","static/image/default-avatar.png"):$("#headimage").attr("src",msg.headImage);
+			   $("#myname").text(msg.name);
+			   $("#motto").text(msg.motto=="null"?"（说点什么）":msg.motto);
+			   $("#mynamepace").attr("href","perdetail.html?userId="+userid+"&benUserId="+userid);
+			   $("#hj2").attr("href","perdetail.html?userId="+userid+"&benUserId="+userid);
+			   $("#hj1").text(msg.name);
+			   $(".biaotiming2").text("IT社区欢迎你,"+msg.name);
+			   getLikeKill(1);
+		   },
+		   complete: function() {$("#usering").remove();
+	        }
+		});
+	$(".pp").text();
+	opinionsFun();
+});
+
+
+var getAllPost=function(pageCount){
+	$("#getSelectPostBtu").css("color","");
+	$("#getMyPostBtu").css("color","");
+	$("#getLikeKillBtu").css("color","");
+	$("#getgetAllPostBtu").css("color","red");
+	flag=3;
+	var type=typeof pageCount;
+	if(type=='undefined'){
+		pageCount=1;
+	}
+	console.log("all"+pageCount);
+	$.ajax({
+		   type: "post",
+		   url: "getallpost",
+		   dataType : "json",
+		   data:{"pageCount":pageCount},
+		   beforeSend:function(){
+  	           $("#bokeing").append('<img src="static/image/loading.gif"/>');
+    		},
+		   error : function(){
+			   alert("获取博客信息失败");
+		   },
+		   success: function(msg){
+			   console.log("msg22:"+msg);
+			   if(msg == null){
+				   alert("获取博客信息失败");
+				   window.location.href="list.html";
+				   return;
+			   }
+			   
+			   var time= new Array(); //定义一数组
+			  
+			   
+			 var str="";
+			   var time=new Array();
+			   for(var index in msg.postinfo){
+				   time=msg.postinfo[index].create_time.split(" ");
+				   var contentdt="";
+			   if(msg.postinfo[index].content.length>50){
+				   contentdt=msg.postinfo[index].content.substring(0,50)+"......";
+			   }else{
+				   contentdt=msg.postinfo[index].content;
+			   }
+			   var hedadd=msg.postinfo[index].userHeadImg=="null"?"static/image/default-avatar.png":msg.postinfo[index].userHeadImg;
+			   
+			    time =msg.postinfo[index].create_time.split(" ");
+			    
+			   str += "<ul class=\"bokeinfo_ul\"><li class=\"bokeinfo_li1\"><a href=\"perdetail.html?userId="
+				   +msg.postinfo[index].create_id+"&benUserId=" +userid+"\"><img class=\"headimage2\" alt=\"图片\" src=\""
+		   			+hedadd+"\"></a></li><li class=\"bokeinfo_li2\"><a href=\"detail.html?id="
+					+msg.postinfo[index].id+"\">"+msg.postinfo[index].title+"</a></li><li class=\"bokeinfo_li3\"><span>"
+					+time[0]+"</span></li><li class=\"bokeinfo_li4\"><a href=\"detail.html?id="
+					+msg.postinfo[index].id+"\">"
+					+contentdt+"</a></li></ul>";
+			   
+			   
+			
+		   }
+			   
+			   $("#bokeinfo").html(str);
+			   $("#yeshu").text(pageCount);
+		   },
+		   complete: function() {$("#bokeing").remove();
+	        }
+		});
+};
+
+
+var getMyPost=function(pageCount){
+	$("#getMyPostBtu").css("color","red");
+	$("#getLikeKillBtu").css("color","");
+	$("#getgetAllPostBtu").css("color","");
+	$("#getSelectPostBtu").css("color","");
+	console.log(pageCount);
+	var type=typeof pageCount;
+	if(type=='undefined'){
+		pageCount=1;
+	}
+	flag=2;
+	$.ajax({
+		   type: "post",
+		   url: "getmypost",
+		   data :{"userid":userid,"pageCount":pageCount},
+		   dataType : "json",
+		   beforeSend:function(){
+  	           $("#bokeing").append('<img src="static/image/loading.gif"/>');
+    		},
+		   error : function(){
+			   alert("获取博客信息失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg == null){
+				   alert("获取博客信息失败");
+				   window.location.href="list.html";
+				   return;
+			   }
+			   if(msg.rs==11){
+				   $("#bokeinfo").html("<p>还没发布任何博客😪</p>");
+				   return;
+			   }
+			   $("#bokeinfo").val('');
+			   var str="";
+			   var time=new Array();
+			   for(var index in msg.mypostinfo){
+				   time=msg.mypostinfo[index].create_time.split(" ");
+				   var contentdt="";
+				   if(msg.mypostinfo[index].content.length>50){
+					   contentdt=msg.mypostinfo[index].content.substring(0,50)+"......";
+				   }else{
+					   contentdt=msg.mypostinfo[index].content;
+				   }
+				   var hedadd=msg.mypostinfo[index].userHeadImg=="null"?"static/image/default-avatar.png":msg.mypostinfo[index].userHeadImg;
+				   
+				   str += "<ul class=\"bokeinfo_ul\"><li class=\"bokeinfo_li1\"><a href=\"perdetail.html?userId="
+					   +msg.mypostinfo[index].create_id+"&benUserId=" +userid+"\"><img class=\"headimage2\" alt=\"图片\" src=\""
+			   			+hedadd+"\"></a></li><li class=\"bokeinfo_li2\"><a href=\"detail.html?id="
+						+msg.mypostinfo[index].id+"\">"+msg.mypostinfo[index].title+"</a></li><li class=\"bokeinfo_li3\"><span>"
+						+time[0]+"</span></li><li class=\"bokeinfo_li4\"><a href=\"detail.html?id="
+						+msg.mypostinfo[index].id+"\">"
+						+contentdt+"</a></li></ul>";
+			   }
+			   $("#bokeinfo").html(str);
+			   $("#yeshu").text(pageCount);
+		   },
+		   complete: function() {$("#bokeing").remove();
+	        }
+		});
+};
+
+
+var getLikeKill=function(pageCount){
+	$("#getMyPostBtu").css("color","");
+	$("#getLikeKillBtu").css("color","red");
+	$("#getgetAllPostBtu").css("color","");
+	$("#getSelectPostBtu").css("color","");
+	flag=1;
+	var type=typeof pageCount;
+	if(type=='undefined'){
+		pageCount=1;
+	}
+	$.ajax({
+		   type: "post",
+		   url: "getmylikepost",
+		   data :{"likeSkill":likeSkill,"pageCount":pageCount},
+		   dataType : "json",
+		   beforeSend:function(){
+  	           $("#bokeing").append('<img src="static/image/loading.gif"/>');
+    		},
+		   error : function(){
+			   alert("获取博客信息失败，请检查网络是否正常");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg == null){
+				   alert("获取博客信息失败");
+				   window.location.href="list.html";
+				   return;
+			   }
+			   var str="";
+			   var time=new Array();
+			   if(msg.rs==111){
+			   for(var index in msg.mylikepostinfo){
+				   time=msg.mylikepostinfo[index].create_time.split(" ");
+				   var contentdt="";
+				   if(msg.mylikepostinfo[index].content.length>50){
+					   contentdt=msg.mylikepostinfo[index].content.substring(0,50)+"......";
+				   }else{
+					   contentdt=msg.mylikepostinfo[index].content;
+				   }
+				   var hedadd=msg.mylikepostinfo[index].userHeadImg=="null"?"static/image/default-avatar.png":msg.mylikepostinfo[index].userHeadImg;
+				   
+				   str += "<ul class=\"bokeinfo_ul\"><li class=\"bokeinfo_li1\"><a href=\"perdetail.html?userId="
+					   +msg.mylikepostinfo[index].create_id+"&benUserId=" +userid+"\"><img class=\"headimage2\" alt=\"图片\" src=\""
+			   			+hedadd+"\"></a></li><li class=\"bokeinfo_li2\"><a href=\"detail.html?id="
+						+msg.mylikepostinfo[index].id+"\">"+msg.mylikepostinfo[index].title+"</a></li><li class=\"bokeinfo_li3\"><span>"
+						+time[0]+"</span></li><li class=\"bokeinfo_li4\"><a href=\"detail.html?id="
+						+msg.mylikepostinfo[index].id+"\">"
+						+contentdt+"</a></li></ul>";
+				   
+				   
+			   }
+		
+			   }
+			   if(msg.rs==1){
+				   for(var index in msg.postinfo){
+					   var contentdt="";
+					   if(msg.postinfo[index].content.length>50){
+						   contentdt=msg.postinfo[index].content.substring(0,50)+"......";
+					   }else{
+						   contentdt=msg.postinfo[index].content;
+					   }
+					   str += "<ul class=\"bokeinfo_ul\"><li><img class=\"headimage2\" alt=\"图片\" src=\""
+				   			+hedadd+"\"></li><li><a href=\"perdetail.html?userId="
+				   			+msg.postinfo[index].create_id+"&benUserId="
+						   +userid+"\">"
+						   +msg.postinfo[index].userName+"</a></li><li><a href=\"detail.html?id="
+						   +msg.postinfo[index].id+"\">"+msg.postinfo[index].title+"</a></li><li><a href=\"detail.html?id= "
+						   +msg.postinfo[index].id+"\">"
+							+contentdt+"</a></li><li><span>"
+							 +msg.postinfo[index].create_time+"</span></li></ul>";
+					   
+					 
+				   }
+			   }
+			   $("#bokeinfo").html(str);
+			   $("#yeshu").text(pageCount);
+		   },
+		   complete: function() {$("#bokeing").remove();
+	        }
+		});
+	
+};
+//------------------------搜索信息-----------------------------------
+var getSlectePost=function(){
+	$("#getMyPostBtu").css("color","");
+	$("#getLikeKillBtu").css("color","");
+	$("#getgetAllPostBtu").css("color","");
+	$("#getSelectPostBtu").css("color","red");
+	$("#bokeinfo").html("");
+	flag=4;
+	var str="<div class=\"div_input\"><input type=\"text\" id=\"SelectPost\" class=\"SelectPost2\"> <button id=\"Select_btn\" class=\"Select_btn2\" onclick=\"select()\">查询</button> </div>";
+	$("#bokeinfo").html(str);
+	
+}
+var select =function(){
+	selecttext=$("#SelectPost").val();
+	var SelectPost=selecttext;
+	$.ajax({
+		   type: "post",
+		   url: "getselectpostpage",
+		   data:{"SelectPost":SelectPost},
+		   dataType : "json",
+		   error : function(){
+		   },
+		   success: function(msg){
+			   selectLastPage=msg.selectPage;
+			   console.log(selectLastPage);
+		   }
+		});
+	paged('firstpage');
+}
+
+//获取查询信息
+var selectPostBtn=function(pageCount){
+	console.log(pageCount);
+	$("#yeshu").text(pageCount);
+	var SelectPost=selecttext;
+	$.ajax({
+		   type: "post",
+		   url: "getselectpost",
+		   data:{"SelectPost":SelectPost,"pageCount":pageCount},
+		   dataType : "json",
+		   error : function(){
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   var str="";
+			   if(msg.result){
+				   var time=new Array();
+				   for(var index in msg.postinfo){
+					   time=msg.postinfo[index].create_time.split(" ");
+					   var contentdt="";
+					   if(msg.postinfo[index].content.length>50){
+						   contentdt=msg.postinfo[index].content.substring(0,50)+"......";
+					   }else{
+						   contentdt=msg.postinfo[index].content;
+					   }
+					   var hedadd=msg.postinfo[index].userHeadImg=="null"?"static/image/default-avatar.png":msg.postinfo[index].userHeadImg;
+					   
+					   str += "<ul class=\"bokeinfo_ul\"><li class=\"bokeinfo_li1\"><a href=\"perdetail.html?userId="
+						   +msg.postinfo[index].create_id+"&benUserId=" +userid+"\"><img class=\"headimage2\" alt=\"图片\" src=\""
+				   			+hedadd+"\"></a></li><li class=\"bokeinfo_li2\"><a href=\"detail.html?id="
+							+msg.postinfo[index].id+"\">"+msg.postinfo[index].title+"</a></li><li class=\"bokeinfo_li3\"><span>"
+							+time[0]+"</span></li><li class=\"bokeinfo_li4\"><a href=\"detail.html?id="
+							+msg.postinfo[index].id+"\">"
+							+contentdt+"</a></li></ul>";
+				   }
+			   }else{
+				   str+="<ul><li>没有找到相关信息</li></ul>";
+			   }
+			   $("#bokeinfo").html(str);
+			   }
+		   });
+		   
+};
+//--------------------发布信息---------------------------------
+var sendboke=function(){
+	var title=$("#title").val();
+	var content=$("#content").val();
+	if(title==""||content==""){
+		$("#title").focus();
+		$("#content").focus();
+		alert("!");
+		return;
+	}
+	$.ajax({
+		   type: "post",
+		   url: "sendboke",
+		   data:{
+			   "userid":userid,
+			   "title":$("#title").val(),
+			   "content":$("#content").val(),
+			   "likeskill":$("#likeskill").val(),
+			   "status":$("#status").val()},
+		   dataType : "json",
+		   error : function(){
+			   alert("博客发表失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg.result){
+				   alert("博客发表成功");
+				   window.location.href="list.html";
+			   }
+			   else{
+				   alert("博客发表失败"); 
+			   }
+		   },
+		   complete: function() {$("#vvv").remove();
+	        }
+		});
+};
+
+//-----------------------分页信息---------------------------------
+var paged=function(curPage){
+	if(flag==1){
+		if(likeLastPage==0){
+			getAllPost(1);
+			return;
+		}
+		if(curPage=='firstpage'){
+			likecurPage=1;
+		}
+		if(curPage=='lastpage'){
+			likecurPage=likecurPage-1;
+			if(likecurPage<1){
+				likecurPage=1;
+			}
+		}
+		if(curPage=='nextpage'){
+			likecurPage=likecurPage+1;
+			if(likecurPage>likeLastPage){
+				likecurPage=likeLastPage;
+			}
+		}
+		if(curPage=='maxPage'){
+			likecurPage=likeLastPage;
+		}
+		if(curPage=='nowpage'){
+			likecurPage=likecurPage;
+		}
+		console.log(likecurPage);
+		getLikeKill(likecurPage);
+		return;
+	}
+	
+	if(flag==2){
+		if(curPage=='firstpage'){
+			mycurPage=1;
+		}
+		if(curPage=='lastpage'){
+			mycurPage=mycurPage-1;
+			if(mycurPage<1){
+				mycurPage=1;
+			}
+		}
+		if(curPage=='nextpage'){
+			mycurPage=mycurPage+1;
+			if(mycurPage>myLastPage){
+				mycurPage=myLastPage;
+			}
+		}
+		if(curPage=='maxPage'){
+			mycurPage=myLastPage;
+		}
+		if(curPage=='nowpage'){
+			mycurPage=mycurPage;
+		}
+		getMyPost(mycurPage);
+		return;
+	}
+	
+	if(flag==3){
+		if(curPage=='firstpage'){
+			allcurPage=1;
+		}
+		if(curPage=='lastpage'){
+			allcurPage=allcurPage-1;
+			if(allcurPage<1){
+				allcurPage=1;
+			}
+		}
+		if(curPage=='nextpage'){
+			allcurPage=allcurPage+1;
+			if(allcurPage>allLastPage){
+				allcurPage=allLastPage;
+			}
+		}
+		if(curPage=='maxPage'){
+			allcurPage=allLastPage;
+		}
+		if(curPage=='nowpage'){
+			allcurPage=allcurPage;
+		}
+		getAllPost(allcurPage);
+		return;
+	}
+	
+	if(flag==4){
+		if(curPage=='firstpage'){
+			selectcurPage=1;
+		}
+		if(curPage=='lastpage'){
+			selectcurPage=selectcurPage-1;
+			if(selectcurPage<1){
+				selectcurPage=1;
+			}
+		}
+		if(curPage=='nextpage'){
+			selectcurPage=selectcurPage+1;
+			if(selectcurPage>selectLastPage){
+				selectcurPage=selectLastPage;
+			}
+		}
+		if(curPage=='maxPage'){
+			selectcurPage=selectLastPage;
+		}
+		if(curPage=='nowpage'){
+			selectcurPage=selectcurPage;
+		}
+		selectPostBtn(selectcurPage);
+		return;
+	}
+	
+}
+</script>
+<script type="text/javascript">
+function opinionsFun(){
+	$.ajax({
+		   type: "post",
+		   url: "getopinions",
+		   dataType : "json",
+		   error : function(){
+			   alert("博客发表失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg.result){
+				   var str="<div class=\"head\"><span class=\"fk\">意见反馈</span></div><ul class=\"opinion_ul\">";
+				   for(var index in msg.opinionsinfo){
+					   str+='<li class=\"opinion_li\">'+msg.opinionsinfo[index].opinions+'</li>';
+				   }
+				   str+='</ul>';
+				   $("#opinions").html(str);
+			   }else{
+				   str+='<li class=\"opinion_li\">目前没有反馈信息</li></ul>';
+				   $("#opinions").html(str);
+			   }
+		   }
+	});
+}
+
+function sendOpinionsFun(){
+	$.ajax({
+		   type: "post",
+		   url: "sendopinions",
+		   data :{"opinions":$("#myOpinion_input").val()},
+		   dataType : "json",
+		   error : function(){
+			   alert("反馈失败");
+		   },
+		   success: function(msg){
+			   console.log(msg);
+			   if(msg.result){
+				   $("#myOpinion_input").val('')
+				   opinionsFun();
+			   }
+		   }
+	});
+}
+</script>
+</head>
+<body>
+	<div class="list">
+		<div class="biaotou">
+			<div class="box1">
+				<h1 class="biaotiming">IT社区</h1>
+				<h2 class="biaotiming2" id="biaotiming2">欢迎你,晓雨</h2>
+			</div>
+			<div class="box2">
+				<a class="mesg" href="index.html">退出</a>
+				<a class="mesg" id="hj2" href="perdetail.html">我的社区</a>
+				<p class="mesg" id="hj1">晓雨</p>
+			</div>
+		</div>
+		<div id="userinfo" class="userinfo">
+			<div id="usering" class="usering"></div>
+			<ul class="user3">
+			<li class="li3">
+						<a href="userinfoupdate.html" id="bjuserinfo">编辑个人资料</a>
+				</li>
+				<li class="li1">
+						<a id="myheadimage" class="myheadimage">
+							<img id="headimage" class="headimage" src="" alt="头像已过期请重新上传你的图片">
+						</a>
+				</li>	
+				
+				<li class="li2">
+						<a id="mynamepace" >
+							<h3 id="myname" class="myname">晓雨</h3>
+						</a>
+				</li>
+				
+				<li class="li4">
+						<p>个性签名:</p><p id="motto" class="motto"></p>
+				</li>
+				<li  class="li5">
+				<div id="opinions" class="opinions"></div>
+					<div id="myOpinion"class="myOpinion">
+						<input type="text" class="myopinion_input" id="myOpinion_input" autocomplete="off">
+						<button class="myopinion_button"  onclick="sendOpinionsFun()">反馈</button>
+					</div>
+				</li>
+			</ul>
+		</div>	
+		
+		
+		
+		
+		
+			<div id="sendpost" class="sendpost">
+				<ul>
+					<li class="li2-1">
+						<span>主题：</span>
+						<textarea class="textarea1" rows="2" cols="120" maxlength="2000"  id="title" placeholder="你在想什么"></textarea><br>
+					</li>
+					<li class="li2-2">
+						<span>内容：</span>
+						<textarea class="textarea2" rows="8" cols="120" maxlength="2000" id="content" placeholder="你在做什么"></textarea><br>
+					</li>
+					<li class="li2-3">
+						<span>相关技术：</span>
+						<select name="likeskill" id="likeskill" required="required">
+							<option value="1">JavaWeb</option>
+							<option value="2">Oracle</option>
+							<option value="3">HTML</option>
+							<option value="4">CSS</option>
+							<option value="5">JavaScript</option>
+							<option value="6">java</option>
+							<option value="8">My SQL</option>
+							<option value="9">MyBatais</option>
+							<option value="10">JQuery</option>
+							<option value="11">JSP</option>
+							<option value="12">VUE</option>
+							<option value="13">Spring</option>
+							<option value="14">SpringBoot</option>
+						</select>
+					</li>
+					<li class="li2-4">
+						<span>对谁可见：</span>
+						<select name="status" id="status" required="required">
+						<option value="1">所有人可见</option>
+						<option value="2">自己可见</option>
+						</select> 
+					</li>
+					<li class="btu1">
+						<button class="btu1-1" onclick="sendboke()">发布</button>
+					</li>
+				</ul>
+			</div>
+	
+			
+	
+		<div id="boke" class="boke">
+			<div class="bokeinfo_box">
+				<div class="tabs">
+					<button id="getMyPostBtu" class="tabs_btu" onclick="getMyPost()"><label>我的</label></button>
+					<button id="getLikeKillBtu" class="tabs_btu" onclick="getLikeKill()"><label>可能感兴趣</label></button>
+					<button id="getgetAllPostBtu" class="tabs_btu" onclick="getAllPost()"><label >全部</label></button>
+					<button id="getSelectPostBtu" class="tabs_btu" onclick="getSlectePost()"><label >搜索关键字</label></button>
+				</div>	
+				<div id="bokeing"></div>
+				<div id="bokeinfo" class="bokeinfo">博客信息</div>
+			</div>
+			<div class= "buttonn">
+				<div class="first_page btus">
+					<button id="home_page" class="btu2" onclick="paged('firstpage')" >首页</button> 
+				</div>
+				<div class="last_page btus"> 
+					<button id="previous_page"  class="btu2" onclick="paged('lastpage')">上一页</button> 
+				</div>
+				<div class="cuttern_page btus">
+					<button id="this_page"  class="btu2" onclick="paged('nowpage')">第<span id="yeshu"></span>页</button>
+				</div>
+				<div class="ha_page btus"> 
+					<button id="next_page"  class="btu2" onclick="paged('nextpage')">下一页</button>
+				</div>
+				<div class="final_page btus"> 
+					<button id="thelast_page"  class="btu2" onclick="paged('maxPage')" >尾页</button> 
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>

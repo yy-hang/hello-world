@@ -1,0 +1,34 @@
+#alertMsg{
+    height: 5rem;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    margin-top: -1rem;
+    line-height: 5rem;
+    width: 100%;
+}
+#alertMsg span{
+    color: #ffffff;
+    background: rgba(0,0,0,0.6);
+    height: 5rem;
+    display: inline-block;
+    padding: 0 3rem;
+    border-radius: 9px;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html{
+    width:100%;
+    height:100%;
+ }
+
+ body{
+     margin: 0;
+    width: 100%;
+    padding: 0;
+    height: 100%;
+    background-color: #75a0f85e;
+ 	}

@@ -1,0 +1,133 @@
+
+.box {
+	 background-color: #dae7f9;
+   position: absolute;
+   height: 100%;
+    width: 100%;
+    margin: 0;
+  padding: 0;
+   
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html{
+    width:100%;
+    height:100%;
+ }
+body {
+ background-color: #dae7f9;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+.userinfo{
+	width: 18%;
+
+    background-color: #eef1fd;
+    float: left;
+   
+    height: 100%;
+}
+.userdeinfo{
+	    width: 100%;
+    height: 100%;
+}
+.perInfoh1{
+    width: 100%;
+    font-size: 2vw;
+    color: #2affff;
+    background-color: #abc6c6;
+    text-align: center;
+    height: 7%;
+}
+
+.liheadImage{
+	margin-top: 12%;
+	 height: 11%;
+	
+}
+.demo{
+	 height: 11%;
+
+	}
+.span1{
+	width: 30%;
+    height: 100%;
+    margin-left: 5%;
+    float: left;
+}
+.headImage1 {
+    width: 30%;
+    height: 100%;
+    border-radius: 100px;
+}
+.postinfo{
+    width: 82%;
+    height: 100%;
+    float: left;
+}
+.header{
+	    width: 100%;
+    height: 7%;
+       background-color: #2db6ff;
+}
+.postdeinfo{
+	    width: 100%;
+    height: 93%;
+}
+.perdetail_ul1{
+	width: 100%;
+	  height: 93%;
+	
+}
+
+.perdetail_ul1 li{
+	width: 100%;
+	 
+	
+}
+.perdetail_ul2{
+	    width: 97%;
+    margin-left: 3%;
+    height: 20%;
+    margin-top: 2%;
+    list-style: none;
+}
+.perdetail_li1{
+       width: 10%;
+    float: left;
+    height: 80%;
+}
+.perdetail_li1 img{
+	
+      width: 100%;
+    height: 100%;
+    border-radius: 100%;
+}
+.perdetail_li2{
+  width: 73%;
+    height: 20%;
+    float: left;
+    margin-left: 2%;
+}
+.perdetail_li3{
+	    width:15%;
+    height: 20%;
+    float: left;
+}
+.perdetail_li4 {
+    width: 83%;
+    float: left;
+    margin-left: 2%;
+    height: 80%;
+}
+.perdetail_li5{
+	    width: 5%;
+    float: left;
+    height: 80%;
+}

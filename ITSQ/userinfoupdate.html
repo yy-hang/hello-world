@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑个人信息</title>
+<link rel="stylesheet" type="text/css" href="static/css/userinfooupdate.css"/>
+<script type="text/javascript" src="static/js/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="static/js/userUplayout.js"></script>
+<script type="text/javascript" src="static/js/userInfoupbc.js"></script>
+<script type="text/javascript" src="static/js/alert.js"></script>
+<link rel="stylesheet" href="static/css/alert.css">
+</head>
+<body>
+<div id="updateUserInfo" class="updateUserInfo">
+	<div id="vvv"></div>
+	<div id="tabs" class="tabs">
+		<button id="jbbu" class="btu">基本信息</button>
+		<button id="xqbu" class="btu">兴趣爱好</button>
+		<button id="lxbu" class="btu">联系方式</button>
+		<button id="userheadima" class="btu">个人头像</button>
+	</div>
+	<div id="jb" class="jb">
+		<ul class="uls ul1">
+			<li class="user_li">
+				<p class="user_p">用户名称：</p>
+				<input type="text" id="zusername" class="inputs" required="required" placeholder="请输入用户昵称">
+			</li>
+			<li class="user_li">
+				<p class="user_p">用户密码：</p>
+				<input type="password" id="zpassword" class="inputs"  required="required" placeholder="请输入用户密码,不能小于6位">
+			</li>
+			<li class="user_li">
+				<p class="user_p">确认密码：</p>
+				<input type="password" id="czpassword" class="inputs"  required="required" placeholder="请确认用户密码">
+			</li>
+			<li class="user_li">
+				<p class="user_p">用户性别：</p>
+				<select name="sex" id="sex" required="required" class="inputs" >
+					<option value="1">男</option>
+					<option value="0">女</option>
+				</select>
+			</li>
+			<li class="user_li">
+				<p class="user_p">出生日期：</p>
+				<input type="date" id="birthdate" class="inputs" ></li>
+			<li class="user_li">
+				<p class="user_p">单位名称：</p>
+				<input type="text" id="unitname" class="inputs"  placeholder="请输入单位名称">
+			</li>
+			<li class="user_li">
+				<p class="user_p">工作职位：</p>
+				<input type="text" id="jobpost" class="inputs"  placeholder="请输入工作职位">
+			</li>
+			<li class="user_li">
+				<p class="user_p">婚姻状态：</p>
+				<select name="maritalstatus" id="maritalstatus" class="inputs" >
+					<option value="1">已婚</option>
+					<option value="2">未婚</option>
+					<option value="3">热恋中</option>
+					<option value="4">单身</option>
+				</select>
+			</li>
+			<li class="li_btu">
+				<button class="sytijiao2" onclick="bcjb()">→</button>
+			</li>
+		</ul>
+	</div>
+
+	<div id="jb1" class="jb">
+		<ul class="uls ul2">
+			<li class="user_li">
+				<p class="user_p">最感兴趣的技术：</p>
+				<select name="likeskill" id="likeskill" required="required">
+					<option value="1">JavaWeb</option>
+					<option value="2">Oracle</option>
+					<option value="3">HTML</option>
+					<option value="4">CSS</option>
+					<option value="5">JavaScript</option>
+					<option value="6">java</option>
+					<option value="8">My SQL</option>
+					<option value="9">MyBatais</option>
+					<option value="10">JQuery</option>
+					<option value="11">JSP</option>
+					<option value="12">VUE</option>
+					<option value="13">Spring</option>
+					<option value="14">SpringBoot</option>
+				</select>
+			</li>
+			<li class="user_li">
+				<p class="user_p">自我介绍：</p>
+				<input type="text" class="inputs"  id="introduce">
+			</li>
+			<li class="user_li">
+				<p class="user_p">座右铭：</p>
+				<input type="text" class="inputs"  id="motto">
+			</li>
+			<li class="li_btu">
+				<button class="sytijiao2" onclick="bcjb1()">→</button>
+			</li>
+		</ul>
+	</div>
+
+	<div id="lxfs" class="jb">
+		<ul class="uls ul3">
+			<li class="user_li">
+				<p class="user_p">QQ:</p>
+				<input type="text" class="inputs"  id="qqlx">
+			</li>
+			<li class="user_li">
+				<p class="user_p">微信:</p>
+				<input type="text" class="inputs"  id="welx">
+			</li>
+			
+			<li class="user_li">
+				<p class="user_p">社区名:</p>
+				<input type="text" class="inputs"  id="bklx">
+			</li>
+			<li class="user_li">
+				<p class="user_p">电话号码:</p>
+				<input type="text" class="inputs"  id="tellx">
+			</li>
+			<li class="li_btu">
+				<button class="sytijiao2" onclick="lxfsbc()">→</button>
+			</li>
+			
+		</ul>
+	</div>
+	<div id="userhead" class="jb">
+		<ul class="uls ul2">
+			<li class="user_li1">
+				<img id="imghead" alt="我的头像">
+			</li>
+			<li class="user_li">
+				<input type="file" id="file" class="inputs" >
+			</li>
+			<li class="li_btu">
+					<button class="sytijiao2" onclick="hibc()">→</button>
+			</li>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript" src="static/js/fileuploda.js"></script>
+</body>
+</html>

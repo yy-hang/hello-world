@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<script type="text/javascript" src="static/js/jquery-3.5.1.js"></script>
+ <script type="text/javascript" src="static/js/index.js"></script>
+ <script type="text/javascript" src="static/js/login.js"></script>
+ <script type="text/javascript" src="static/js/register.js"></script>
+ <script type="text/javascript" src="static/js/wangji.js"></script>
+ <script type="text/javascript" src="static/js/alert.js"></script>
+<link rel="stylesheet" href="static/css/alert.css">
+ <link rel="stylesheet" type="text/css" href="static/css/index.css"/>
+
+</head>
+<body>
+	<div class="sy">
+		<div id="denglu" class="denglu">
+			<ul class="ul1">
+				<li>
+					<p class="lab">用户账号：</p>
+					<input type="text" id="id" class="username2" required="required"  autocomplete="off" placeholder="请输入用户账号"><br>
+				</li>
+				<li>
+					<p class="lab">用户密码：</p>
+					<input type="password" id="password" class="password2" required="required"  autocomplete="off" placeholder="请输入用户密码"><br>
+					
+				</li>
+				<li>
+					<button class="sytijiao1 sytijiao" onclick="logintj()">→</button>
+				</li>
+				<li>
+					<div id="dlll" class="dlll"></div>
+				</li>
+			</ul>
+			<div class="but1">
+				<button class="dlbut but" onclick="login()">登录</button>
+				<p class="fenge">|</p>
+				<button class="zcbut but" onclick="register()">注册</button>
+			</div>
+		</div>
+		<div id="zhuce" class="zhuce">
+			<ul class="ul2">
+				<li>
+					<p class="lab">用户名称：</p>
+					<input type="text" id="zusername"  class="username2"  autocomplete="off" placeholder="请输入用户名称">
+				</li>
+				<li>
+					<p class="lab">用户密码：</p>
+					<input type="password" id="zpassword" class="password2"  autocomplete="off" placeholder="请输入用户密码,不能小于6位">
+				</li>
+				<li>
+					<p class="lab">确认密码：</p>
+					<input type="password" id="czpassword"  class="password2"  autocomplete="off" placeholder="请确认用户密码">
+				</li>
+				<li>
+					<p class="lab">用户性别：</p>
+					<select name="sex" id="sex" class="username2"  autocomplete="off">
+					<option value="1">男</option>
+					<option value="0">女</option>
+					</select>
+				</li>
+				<li>
+					<p class="lab">出生日期：</p>
+					<input type="date" id="birthdate" class="username2">
+				</li>
+				<li>
+					<p class="lab">单位名称：</p>
+					<input type="text" id="unitname" class="username2" placeholder="请输入单位名称">
+				</li>
+				<li>
+					<p class="lab">工作职位：</p>
+					<input type="text" id="jobpost" class="username2" placeholder="请输入工作职位">
+				</li>
+				<li>
+					<p class="lab">婚姻状态：</p>
+					<select name="maritalstatus" id="maritalstatus" class="username2">
+					<option value="1">已婚</option>
+					<option value="2">未婚</option>
+					<option value="3">热恋中</option>
+					<option value="4">单身</option>
+					</select>
+				</li>
+				<li>
+					<p class="lab">兴趣技术：</p>
+					<select name="likeskill" id="likeskill" class="username2" required="required">
+						<option value="1">JavaWeb</option>
+						<option value="2">Oracle</option>
+						<option value="3">HTML</option>
+						<option value="4">CSS</option>
+						<option value="5">JavaScript</option>
+						<option value="6">java</option>
+						<option value="8">My SQL</option>
+						<option value="9">MyBatais</option>
+						<option value="10">JQuery</option>
+						<option value="11">JSP</option>
+						<option value="12">VUE</option>
+						<option value="13">Spring</option>
+						<option value="14">SpringBoot</option>
+					</select>
+				</li>
+				<li>
+					<button class="sytijiao2 sytijiao" onclick="registertj()">→</button>
+				</li>
+			</ul>
+			<div class="but2">
+					<button class="dlbut but" onclick="login()">登录</button>
+					<p class="fenge">|</p>
+					<button class="zcbut but" onclick="register()">注册</button>
+			</div>
+			
+		</div>
+		
+
+	</div>
+		
+</html>
